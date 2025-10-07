@@ -4,23 +4,42 @@ import { useState } from 'react';
 import { Navigation } from '@/components/layout/Navigation';
 import { VaultBalance } from '@/components/vault/VaultBalance';
 import { UpcomingCommitments } from '@/components/vault/UpcomingCommitments';
+import { PaymentFlow } from '@/components/vault/PaymentFlow';
+import { PaymentTest } from '@/components/vault/PaymentTest';
+import { ErrorHandlingTest } from '@/components/vault/ErrorHandlingTest';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { mockScheduledGifts, mockOccasions, mockRecipients } from '@/lib/mock-data';
-import { Plus, RefreshCw, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { Plus, RefreshCw, ArrowUpRight, ArrowDownRight, Send } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import { type PaymentResult } from '@/lib/payment';
 
 export default function VaultPage() {
   const [balance] = useState(500);
   const [totalDeposited] = useState(1200);
   const [totalSpent] = useState(700);
   const [upcomingCommitments] = useState(150);
-
-  const recentTransactions = [
+  const [showPaymentFlow, setShowPaymentFlow] = useState(false);
+  const [recentTransactions, setRecentTransactions] = useState([
     { id: '1', type: 'deposit', amount: 100, date: new Date('2024-03-15'), description: 'Vault Deposit' },
     { id: '2', type: 'gift', amount: -50, date: new Date('2024-03-10'), description: 'Gift to Marley' },
     { id: '3', type: 'deposit', amount: 200, date: new Date('2024-03-01'), description: 'Monthly Auto-Replenish' },
-  ];
+  ]);
+
+  const handlePaymentComplete = (result: PaymentResult) => {
+    if (result.success && result.txHash) {
+      // Add new transaction to the list
+      const newTransaction = {
+        id: Date.now().toString(),
+        type: 'gift' as const,
+        amount: -parseFloat('10'), // This would come from the payment amount
+        date: new Date(),
+        description: 'USDC Payment via x402',
+      };
+      setRecentTransactions(prev => [newTransaction, ...prev]);
+      setShowPaymentFlow(false);
+    }
+  };
 
   return (
     <div className="min-h-screen pb-24">
@@ -43,7 +62,7 @@ export default function VaultPage() {
         />
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <Button variant="primary" className="flex items-center justify-center gap-2">
             <Plus size={20} />
             <span>Add Funds</span>
@@ -52,7 +71,26 @@ export default function VaultPage() {
             <RefreshCw size={20} />
             <span>Auto-Replenish</span>
           </Button>
+          <Button 
+            variant="outline" 
+            className="flex items-center justify-center gap-2"
+            onClick={() => setShowPaymentFlow(!showPaymentFlow)}
+          >
+            <Send size={20} />
+            <span>Send Payment</span>
+          </Button>
         </div>
+
+        {/* Payment Flow */}
+        {showPaymentFlow && (
+          <PaymentFlow onPaymentComplete={handlePaymentComplete} />
+        )}
+
+        {/* Payment Tests */}
+        <PaymentTest />
+
+        {/* Error Handling Tests */}
+        <ErrorHandlingTest />
 
         {/* Upcoming Commitments */}
         <UpcomingCommitments
