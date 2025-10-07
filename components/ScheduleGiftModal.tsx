@@ -22,57 +22,75 @@ export function ScheduleGiftModal({ occasion, onClose }: ScheduleGiftModalProps)
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="glass-card max-w-lg w-full max-h-[90vh] overflow-y-auto">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
+      <div className="glass-card max-w-lg w-full max-h-[90vh] overflow-y-auto custom-scrollbar">
         <div className="sticky top-0 bg-surface border-b p-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-fg">Schedule Gift</h2>
+          <h2 id="modal-title" className="text-lg sm:text-xl font-bold text-fg">Schedule Gift</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-700 rounded-lg transition-all duration-200"
+            className="p-2 hover:bg-slate-700 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg"
+            aria-label="Close modal"
           >
             <X className="w-5 h-5 text-muted" />
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-6">
           {/* Recipient Info */}
           <div className="flex items-center gap-4 p-4 bg-surface rounded-lg">
-            <div className="w-12 h-12 bg-accent bg-opacity-20 rounded-full flex items-center justify-center text-2xl">
+            <div className="w-12 h-12 bg-accent bg-opacity-20 rounded-full flex items-center justify-center text-2xl" aria-hidden="true">
               {occasion?.recipientAvatar || '🎁'}
             </div>
-            <div>
-              <h3 className="font-semibold text-fg">{occasion?.recipientName || 'Recipient'}</h3>
+            <div className="min-w-0 flex-1">
+              <h3 className="font-semibold text-fg truncate">{occasion?.recipientName || 'Recipient'}</h3>
               <p className="text-sm text-muted">{occasion?.occasionType} • {occasion?.date}</p>
             </div>
           </div>
 
           {/* Gift Type Tabs */}
-          <div className="flex gap-2 p-1 bg-surface rounded-lg">
-            <button
-              onClick={() => setGiftType('crypto')}
-              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-200 ${
-                giftType === 'crypto' ? 'bg-accent text-slate-900' : 'text-muted hover:text-fg'
-              }`}
-            >
-              Crypto
-            </button>
-            <button
-              onClick={() => setGiftType('physical')}
-              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-200 ${
-                giftType === 'physical' ? 'bg-accent text-slate-900' : 'text-muted hover:text-fg'
-              }`}
-            >
-              Physical
-            </button>
-            <button
-              onClick={() => setGiftType('both')}
-              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-200 ${
-                giftType === 'both' ? 'bg-accent text-slate-900' : 'text-muted hover:text-fg'
-              }`}
-            >
-              Both
-            </button>
-          </div>
+          <fieldset>
+            <legend className="sr-only">Select gift type</legend>
+            <div className="flex gap-2 p-1 bg-surface rounded-lg" role="tablist">
+              <button
+                onClick={() => setGiftType('crypto')}
+                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg ${
+                  giftType === 'crypto' ? 'bg-accent text-slate-900' : 'text-muted hover:text-fg'
+                }`}
+                role="tab"
+                aria-selected={giftType === 'crypto'}
+                aria-controls="crypto-panel"
+              >
+                Crypto
+              </button>
+              <button
+                onClick={() => setGiftType('physical')}
+                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg ${
+                  giftType === 'physical' ? 'bg-accent text-slate-900' : 'text-muted hover:text-fg'
+                }`}
+                role="tab"
+                aria-selected={giftType === 'physical'}
+                aria-controls="physical-panel"
+              >
+                Physical
+              </button>
+              <button
+                onClick={() => setGiftType('both')}
+                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg ${
+                  giftType === 'both' ? 'bg-accent text-slate-900' : 'text-muted hover:text-fg'
+                }`}
+                role="tab"
+                aria-selected={giftType === 'both'}
+                aria-controls="both-panel"
+              >
+                Both
+              </button>
+            </div>
+          </fieldset>
 
           {/* Crypto Gift Form */}
           {(giftType === 'crypto' || giftType === 'both') && (
@@ -159,16 +177,16 @@ export function ScheduleGiftModal({ occasion, onClose }: ScheduleGiftModalProps)
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-border">
             <button
               onClick={onClose}
-              className="btn-secondary flex-1"
+              className="btn-secondary flex-1 order-2 sm:order-1"
             >
               Cancel
             </button>
             <button
               onClick={handleSchedule}
-              className="btn-primary flex-1"
+              className="btn-primary flex-1 order-1 sm:order-2"
             >
               Schedule Gift
             </button>

@@ -31,3 +31,18 @@ export function truncateAddress(address: string): string {
 export function cn(...classes: (string | undefined | null | false)[]): string {
   return classes.filter(Boolean).join(' ');
 }
+
+export function getDaysUntil(dateString: string): number {
+  const today = new Date();
+  const target = new Date(dateString);
+  const diffTime = target.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+}
+
+export function formatDaysUntil(days: number): string {
+  if (days === 0) return 'Today';
+  if (days === 1) return 'Tomorrow';
+  if (days < 0) return 'Past';
+  return `${days} days`;
+}

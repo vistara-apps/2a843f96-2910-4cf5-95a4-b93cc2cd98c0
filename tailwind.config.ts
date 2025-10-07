@@ -9,16 +9,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: 'var(--color-bg)',
-        fg: 'var(--color-fg)',
-        accent: 'var(--color-accent)',
-        'accent-soft': 'var(--color-accent-soft)',
-        border: 'var(--color-border)',
-        surface: 'var(--color-surface)',
-        muted: 'var(--color-muted)',
-        error: 'var(--color-error)',
-        success: 'var(--color-success)',
-        warning: 'var(--color-warning)',
+        bg: 'hsl(var(--color-bg))',
+        fg: 'hsl(var(--color-fg))',
+        accent: 'hsl(var(--color-accent))',
+        'accent-soft': 'hsl(var(--color-accent-soft))',
+        border: 'hsl(var(--color-border))',
+        surface: 'hsl(var(--color-surface))',
+        muted: 'hsl(var(--color-muted))',
+        error: 'hsl(var(--color-error))',
+        success: 'hsl(var(--color-success))',
+        warning: 'hsl(var(--color-warning))',
       },
       borderRadius: {
         sm: '8px',

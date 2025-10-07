@@ -41,7 +41,7 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen pb-24">
       {/* Header */}
-      <header className="bg-surface border-b" style={{ borderColor: 'var(--color-border)' }}>
+      <header className="bg-surface border-b border-border">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <h1 className="text-2xl font-bold text-fg">Settings</h1>
           <p className="text-sm text-muted">Manage your account</p>
@@ -72,7 +72,7 @@ export default function SettingsPage() {
             <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-3">
               {section.title}
             </h3>
-            <Card className="divide-y" style={{ borderColor: 'var(--color-border)' }}>
+            <Card className="divide-y divide-border">
               {section.items.map((item) => {
                 const Icon = item.icon;
                 return (
