@@ -12,7 +12,7 @@ interface OccasionCardProps {
 }
 
 export function OccasionCard({ occasion, recipient, onClick }: OccasionCardProps) {
-  const daysUntil = getDaysUntil(occasion.date);
+  const daysUntil = getDaysUntil(new Date(occasion.date));
   const isToday = daysUntil === 0;
   const isPast = daysUntil < 0;
 

@@ -1,7 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { X, DollarSign, Video, Image as ImageIcon, Package } from 'lucide-react';
+import { X, DollarSign, Video, Image as ImageIcon, Package, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { usePayments } from '@/lib/hooks/usePayments';
+import { useAccount } from 'wagmi';
+import { type Address } from 'viem';
 
 interface ScheduleGiftModalProps {
   occasion: any;
@@ -14,11 +17,71 @@ export function ScheduleGiftModal({ occasion, onClose }: ScheduleGiftModalProps)
   const [giftType, setGiftType] = useState<GiftType>('crypto');
   const [amount, setAmount] = useState('25');
   const [token, setToken] = useState('USDC');
+  const [recipientAddress, setRecipientAddress] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
+  const [transactionHash, setTransactionHash] = useState<string | null>(null);
 
-  const handleSchedule = () => {
-    // Handle gift scheduling logic
-    console.log('Scheduling gift:', { giftType, amount, token });
-    onClose();
+  const { isConnected } = useAccount();
+  const { executePayment, waitForConfirmation, balance, error: paymentError } = usePayments();
+
+  const handleSchedule = async () => {
+    if (!isConnected) {
+      alert('Please connect your wallet first');
+      return;
+    }
+
+    if (!recipientAddress) {
+      alert('Please enter recipient address');
+      return;
+    }
+
+    if (!amount || parseFloat(amount) <= 0) {
+      alert('Please enter a valid amount');
+      return;
+    }
+
+    // Validate address format (basic check)
+    if (!recipientAddress.match(/^0x[a-fA-F0-9]{40}$/)) {
+      alert('Please enter a valid Ethereum address');
+      return;
+    }
+
+    setIsProcessing(true);
+    setPaymentStatus('processing');
+
+    try {
+      const result = await executePayment({
+        recipientAddress: recipientAddress as Address,
+        amount,
+        recipientName: occasion?.recipientName,
+        occasionType: occasion?.occasionType,
+        message: `Gift for ${occasion?.occasionType} from GiftChain`,
+      });
+
+      if (result.success && result.transactionHash) {
+        setTransactionHash(result.transactionHash);
+        setPaymentStatus('success');
+        
+        // Wait for confirmation
+        const confirmation = await waitForConfirmation(result.transactionHash, 1);
+        if (confirmation.confirmed) {
+          console.log('Transaction confirmed:', {
+            hash: result.transactionHash,
+            blockNumber: confirmation.blockNumber,
+            gasUsed: confirmation.gasUsed,
+          });
+        }
+      } else {
+        setPaymentStatus('error');
+        console.error('Payment failed:', result.error);
+      }
+    } catch (error) {
+      setPaymentStatus('error');
+      console.error('Payment error:', error);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -78,6 +141,18 @@ export function ScheduleGiftModal({ occasion, onClose }: ScheduleGiftModalProps)
           {(giftType === 'crypto' || giftType === 'both') && (
             <div className="space-y-4">
               <div>
+                <label className="block text-sm font-medium text-fg mb-2">Recipient Address</label>
+                <input
+                  type="text"
+                  value={recipientAddress}
+                  onChange={(e) => setRecipientAddress(e.target.value)}
+                  className="input-field"
+                  placeholder="0x..."
+                  disabled={isProcessing}
+                />
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium text-fg mb-2">Amount</label>
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted" />
@@ -87,8 +162,12 @@ export function ScheduleGiftModal({ occasion, onClose }: ScheduleGiftModalProps)
                     onChange={(e) => setAmount(e.target.value)}
                     className="input-field pl-10"
                     placeholder="25.00"
+                    disabled={isProcessing}
                   />
                 </div>
+                {balance && (
+                  <p className="text-xs text-muted mt-1">Available: {balance} USDC</p>
+                )}
               </div>
 
               <div>
@@ -97,9 +176,10 @@ export function ScheduleGiftModal({ occasion, onClose }: ScheduleGiftModalProps)
                   value={token}
                   onChange={(e) => setToken(e.target.value)}
                   className="input-field"
+                  disabled={isProcessing}
                 >
                   <option value="USDC">USDC</option>
-                  <option value="ETH">ETH</option>
+                  <option value="ETH">ETH (Coming Soon)</option>
                 </select>
               </div>
 
@@ -158,19 +238,89 @@ export function ScheduleGiftModal({ occasion, onClose }: ScheduleGiftModalProps)
             </div>
           </div>
 
+          {/* Payment Status */}
+          {paymentStatus !== 'idle' && (
+            <div className={`p-4 rounded-lg flex items-center gap-3 ${
+              paymentStatus === 'processing' ? 'bg-blue-900 bg-opacity-20' :
+              paymentStatus === 'success' ? 'bg-green-900 bg-opacity-20' :
+              'bg-red-900 bg-opacity-20'
+            }`}>
+              {paymentStatus === 'processing' && (
+                <>
+                  <Loader2 className="w-5 h-5 text-blue-400 animate-spin" />
+                  <div>
+                    <p className="font-medium text-blue-400">Processing Payment...</p>
+                    <p className="text-sm text-blue-300">Please confirm the transaction in your wallet</p>
+                  </div>
+                </>
+              )}
+              {paymentStatus === 'success' && (
+                <>
+                  <CheckCircle className="w-5 h-5 text-green-400" />
+                  <div>
+                    <p className="font-medium text-green-400">Payment Successful!</p>
+                    {transactionHash && (
+                      <a
+                        href={`https://basescan.org/tx/${transactionHash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-green-300 hover:underline"
+                      >
+                        View on BaseScan →
+                      </a>
+                    )}
+                  </div>
+                </>
+              )}
+              {paymentStatus === 'error' && (
+                <>
+                  <AlertCircle className="w-5 h-5 text-red-400" />
+                  <div>
+                    <p className="font-medium text-red-400">Payment Failed</p>
+                    <p className="text-sm text-red-300">
+                      {paymentError || 'An error occurred during payment'}
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Wallet Connection Warning */}
+          {!isConnected && (
+            <div className="p-4 bg-yellow-900 bg-opacity-20 rounded-lg flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-yellow-400" />
+              <div>
+                <p className="font-medium text-yellow-400">Wallet Not Connected</p>
+                <p className="text-sm text-yellow-300">Please connect your wallet to send gifts</p>
+              </div>
+            </div>
+          )}
+
           {/* Action Buttons */}
           <div className="flex gap-3">
             <button
               onClick={onClose}
               className="btn-secondary flex-1"
+              disabled={isProcessing}
             >
-              Cancel
+              {paymentStatus === 'success' ? 'Close' : 'Cancel'}
             </button>
             <button
               onClick={handleSchedule}
               className="btn-primary flex-1"
+              disabled={isProcessing || !isConnected || paymentStatus === 'success'}
             >
-              Schedule Gift
+              {isProcessing ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Processing...
+                </>
+              ) : paymentStatus === 'success' ? (
+                'Gift Sent!'
+              ) : (
+                'Send Gift'
+              )}
             </button>
           </div>
         </div>
