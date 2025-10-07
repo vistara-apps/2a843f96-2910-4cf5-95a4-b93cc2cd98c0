@@ -72,7 +72,7 @@ export default function SettingsPage() {
             <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-3">
               {section.title}
             </h3>
-            <Card className="divide-y" style={{ borderColor: 'var(--color-border)' }}>
+            <Card className="divide-y border-border">
               {section.items.map((item) => {
                 const Icon = item.icon;
                 return (
