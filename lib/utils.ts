@@ -5,38 +5,27 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
-export function formatDate(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
+export function formatDate(date: Date): string {
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
-    year: 'numeric',
-  }).format(d);
+  }).format(date);
 }
 
-export function getDaysUntil(dateString: string): number {
+export function calculateDaysUntil(targetDate: Date): number {
   const today = new Date();
-  const currentYear = today.getFullYear();
-  const [month, day] = dateString.split('-').map(Number);
-  
-  let targetDate = new Date(currentYear, month - 1, day);
-  
-  if (targetDate < today) {
-    targetDate = new Date(currentYear + 1, month - 1, day);
-  }
-  
-  const diffTime = targetDate.getTime() - today.getTime();
+  const target = new Date(targetDate);
+  const diffTime = target.getTime() - today.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
   return diffDays;
 }
 
-export function formatDaysUntil(days: number): string {
-  if (days === 0) return 'Today';
-  if (days === 1) return 'Tomorrow';
-  if (days < 7) return `${days} days`;
-  if (days < 30) return `${Math.floor(days / 7)} weeks`;
-  return `${Math.floor(days / 30)} months`;
+export function calculateTransactionFee(amount: number, feePercent: number): number {
+  return amount * (feePercent / 100);
+}
+
+export function truncateAddress(address: string): string {
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
 export function cn(...classes: (string | undefined | null | false)[]): string {

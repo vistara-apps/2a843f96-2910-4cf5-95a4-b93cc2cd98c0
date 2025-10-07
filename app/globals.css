@@ -2,55 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* GiftChain Finance Theme - Dark Navy + Gold */
-  --color-bg: hsl(220, 30%, 8%);
-  --color-fg: hsl(0, 0%, 95%);
-  --color-accent: hsl(45, 100%, 50%);
-  --color-accent-soft: hsl(45, 100%, 95%);
-  --color-border: hsl(220, 20%, 20%);
-  --color-surface: hsl(220, 25%, 12%);
-  --color-muted: hsl(220, 10%, 60%);
-  --color-error: hsl(0, 84%, 60%);
-  --color-success: hsl(142, 76%, 36%);
-  --color-warning: hsl(38, 92%, 50%);
-}
-
 @layer base {
+  :root {
+    /* GiftChain Finance Theme - Dark Navy + Gold */
+    --color-bg: 15 23 42; /* slate-900 */
+    --color-fg: 248 250 252; /* slate-50 */
+    --color-accent: 255 215 0; /* gold */
+    --color-accent-soft: 254 243 199; /* amber-100 */
+    --color-border: 51 65 85; /* slate-700 */
+    --color-surface: 30 41 59; /* slate-800 */
+    --color-muted: 148 163 184; /* slate-400 */
+    --color-error: 239 68 68; /* red-500 */
+    --color-success: 34 197 94; /* green-500 */
+    --color-warning: 251 146 60; /* orange-400 */
+  }
+
   * {
     @apply border-border;
   }
-  
+
   body {
-    @apply bg-bg text-fg;
+    @apply bg-bg text-fg antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-surface;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-lg;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted;
   }
 }
 
 @layer components {
   .glass-card {
     @apply bg-surface border rounded-lg;
-    border-color: var(--color-border);
+    border-color: rgb(var(--color-border) / 0.3);
     backdrop-filter: blur(10px);
   }
 
   .btn-primary {
-    @apply bg-accent text-bg px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl;
+    @apply bg-accent text-slate-900 px-6 py-3 rounded-lg font-semibold hover:bg-yellow-400 transition-all duration-200 shadow-lg hover:shadow-xl;
   }
 
   .btn-secondary {
-    @apply bg-surface text-fg px-6 py-3 rounded-lg font-semibold border hover:bg-opacity-80 transition-all duration-200;
-    border-color: var(--color-border);
+    @apply bg-surface text-fg px-6 py-3 rounded-lg font-medium border hover:bg-slate-700 transition-all duration-200;
   }
 
   .input-field {
-    @apply bg-surface text-fg px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-200;
-    border-color: var(--color-border);
+    @apply w-full px-4 py-3 bg-surface border rounded-lg text-fg placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-200;
   }
 
   .metric-card {
@@ -62,7 +72,7 @@
   }
 
   .occasion-card-today {
-    @apply occasion-card border-2 border-accent;
+    @apply occasion-card border-accent;
     animation: pulse-glow 2s ease-in-out infinite;
   }
 
@@ -76,7 +86,7 @@
   }
 
   .fade-in {
-    animation: fadeIn 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    animation: fadeIn 0.25s ease-in;
   }
 
   @keyframes fadeIn {
@@ -88,14 +98,5 @@
       opacity: 1;
       transform: translateY(0);
     }
-  }
-}
-
-@layer utilities {
-  .text-gradient {
-    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-warning) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
   }
 }

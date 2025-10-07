@@ -1,14 +1,15 @@
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'GiftChain - Never Miss a Birthday',
   description: 'Automated crypto and physical gift-giving with personalized touches',
-  openGraph: {
-    title: 'GiftChain',
-    description: 'Never miss a birthday. Never stress about gifts. All automated, all crypto.',
-    images: ['/og-image.png'],
+  icons: {
+    icon: '/favicon.ico',
   },
 };
 
@@ -19,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>
     </html>
