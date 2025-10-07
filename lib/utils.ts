@@ -31,3 +31,23 @@ export function truncateAddress(address: string): string {
 export function cn(...classes: (string | undefined | null | false)[]): string {
   return classes.filter(Boolean).join(' ');
 }
+
+export function getDaysUntil(targetDate: string | Date): number {
+  const today = new Date();
+  const target = new Date(targetDate);
+  const diffTime = target.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+}
+
+export function formatDaysUntil(days: number): string {
+  if (days < 0) {
+    return `${Math.abs(days)} days ago`;
+  } else if (days === 0) {
+    return 'Today';
+  } else if (days === 1) {
+    return 'Tomorrow';
+  } else {
+    return `In ${days} days`;
+  }
+}
