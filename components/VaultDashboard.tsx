@@ -17,41 +17,43 @@ export function VaultDashboard() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 fade-in">
       {/* Balance Card */}
-      <div className="glass-card p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <p className="text-sm text-muted mb-1">Gift Vault Balance</p>
-            <h2 className="text-4xl font-bold text-fg">${vaultBalance.toFixed(2)}</h2>
+      <section aria-labelledby="vault-balance-heading">
+        <div className="glass-card p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 id="vault-balance-heading" className="text-sm text-muted mb-1">Gift Vault Balance</h2>
+              <p className="text-3xl sm:text-4xl font-bold text-fg">${vaultBalance.toFixed(2)}</p>
+            </div>
+            <div className="w-16 h-16 bg-accent bg-opacity-20 rounded-full flex items-center justify-center" aria-hidden="true">
+              <Wallet className="w-8 h-8 text-accent" />
+            </div>
           </div>
-          <div className="w-16 h-16 bg-accent bg-opacity-20 rounded-full flex items-center justify-center">
-            <Wallet className="w-8 h-8 text-accent" />
-          </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="p-4 bg-surface rounded-lg">
-            <p className="text-sm text-muted mb-1">Monthly Budget</p>
-            <p className="text-xl font-bold text-fg">${monthlyBudget.toFixed(2)}</p>
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="p-4 bg-surface rounded-lg">
+              <p className="text-sm text-muted mb-1">Monthly Budget</p>
+              <p className="text-lg sm:text-xl font-bold text-fg">${monthlyBudget.toFixed(2)}</p>
+            </div>
+            <div className="p-4 bg-surface rounded-lg">
+              <p className="text-sm text-muted mb-1">Committed</p>
+              <p className="text-lg sm:text-xl font-bold text-warning">${upcomingCommitments.toFixed(2)}</p>
+            </div>
           </div>
-          <div className="p-4 bg-surface rounded-lg">
-            <p className="text-sm text-muted mb-1">Committed</p>
-            <p className="text-xl font-bold text-warning">${upcomingCommitments.toFixed(2)}</p>
-          </div>
-        </div>
 
-        <div className="flex gap-3">
-          <button className="btn-primary flex-1 flex items-center justify-center gap-2">
-            <Plus className="w-5 h-5" />
-            Add Funds
-          </button>
-          <button className="btn-secondary flex items-center justify-center gap-2">
-            <TrendingUp className="w-5 h-5" />
-            Auto-Replenish
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button className="btn-primary flex-1 flex items-center justify-center gap-2">
+              <Plus className="w-5 h-5" aria-hidden="true" />
+              Add Funds
+            </button>
+            <button className="btn-secondary flex items-center justify-center gap-2">
+              <TrendingUp className="w-5 h-5" aria-hidden="true" />
+              Auto-Replenish
+            </button>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4">
@@ -68,41 +70,44 @@ export function VaultDashboard() {
       </div>
 
       {/* Transaction History */}
-      <div className="glass-card p-6">
-        <h3 className="text-lg font-bold text-fg mb-4">Recent Transactions</h3>
-        <div className="space-y-3">
-          {transactions.map((tx) => (
-            <div
-              key={tx.id}
-              className="flex items-center justify-between p-4 bg-surface rounded-lg hover:bg-slate-700 transition-all duration-200"
-            >
-              <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  tx.type === 'deposit' ? 'bg-success bg-opacity-20' : 'bg-accent bg-opacity-20'
-                }`}>
-                  {tx.type === 'deposit' ? (
-                    <ArrowDownRight className="w-5 h-5 text-success" />
-                  ) : (
-                    <ArrowUpRight className="w-5 h-5 text-accent" />
-                  )}
+      <section aria-labelledby="transactions-heading">
+        <div className="glass-card p-4 sm:p-6">
+          <h3 id="transactions-heading" className="text-lg font-bold text-fg mb-4">Recent Transactions</h3>
+          <div className="space-y-3 custom-scrollbar max-h-96 overflow-y-auto">
+            {transactions.map((tx) => (
+              <div
+                key={tx.id}
+                className="flex items-center justify-between p-4 bg-surface rounded-lg hover:bg-slate-700 transition-all duration-200"
+                role="listitem"
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    tx.type === 'deposit' ? 'bg-success bg-opacity-20' : 'bg-accent bg-opacity-20'
+                  }`} aria-hidden="true">
+                    {tx.type === 'deposit' ? (
+                      <ArrowDownRight className="w-5 h-5 text-success" />
+                    ) : (
+                      <ArrowUpRight className="w-5 h-5 text-accent" />
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-fg truncate">{tx.recipient}</p>
+                    <p className="text-sm text-muted">{tx.date}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium text-fg">{tx.recipient}</p>
-                  <p className="text-sm text-muted">{tx.date}</p>
+                <div className="text-right flex-shrink-0">
+                  <p className={`font-bold ${
+                    tx.type === 'deposit' ? 'text-success' : 'text-fg'
+                  }`}>
+                    {tx.type === 'deposit' ? '+' : ''}{tx.amount > 0 ? '$' : '-$'}{Math.abs(tx.amount).toFixed(2)}
+                  </p>
+                  <p className="text-xs text-muted capitalize">{tx.status}</p>
                 </div>
               </div>
-              <div className="text-right">
-                <p className={`font-bold ${
-                  tx.type === 'deposit' ? 'text-success' : 'text-fg'
-                }`}>
-                  {tx.type === 'deposit' ? '+' : ''}{tx.amount > 0 ? '$' : '-$'}{Math.abs(tx.amount).toFixed(2)}
-                </p>
-                <p className="text-xs text-muted capitalize">{tx.status}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

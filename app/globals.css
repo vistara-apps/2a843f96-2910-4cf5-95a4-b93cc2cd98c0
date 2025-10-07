@@ -5,16 +5,16 @@
 @layer base {
   :root {
     /* GiftChain Finance Theme - Dark Navy + Gold */
-    --color-bg: 15 23 42; /* slate-900 */
-    --color-fg: 248 250 252; /* slate-50 */
-    --color-accent: 255 215 0; /* gold */
-    --color-accent-soft: 254 243 199; /* amber-100 */
-    --color-border: 51 65 85; /* slate-700 */
-    --color-surface: 30 41 59; /* slate-800 */
-    --color-muted: 148 163 184; /* slate-400 */
-    --color-error: 239 68 68; /* red-500 */
-    --color-success: 34 197 94; /* green-500 */
-    --color-warning: 251 146 60; /* orange-400 */
+    --color-bg: 222 47% 11%; /* hsl(222, 47%, 11%) - slate-900 */
+    --color-fg: 210 40% 98%; /* hsl(210, 40%, 98%) - slate-50 */
+    --color-accent: 51 100% 50%; /* hsl(51, 100%, 50%) - gold */
+    --color-accent-soft: 48 96% 89%; /* hsl(48, 96%, 89%) - amber-100 */
+    --color-border: 215 28% 27%; /* hsl(215, 28%, 27%) - slate-700 */
+    --color-surface: 217 33% 17%; /* hsl(217, 33%, 17%) - slate-800 */
+    --color-muted: 215 20% 65%; /* hsl(215, 20%, 65%) - slate-400 */
+    --color-error: 0 84% 60%; /* hsl(0, 84%, 60%) - red-500 */
+    --color-success: 142 76% 36%; /* hsl(142, 76%, 36%) - green-500 */
+    --color-warning: 25 95% 53%; /* hsl(25, 95%, 53%) - orange-400 */
   }
 
   * {
@@ -47,28 +47,40 @@
 @layer components {
   .glass-card {
     @apply bg-surface border rounded-lg;
-    border-color: rgb(var(--color-border) / 0.3);
+    border-color: hsl(var(--color-border) / 0.3);
     backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px hsl(var(--color-bg) / 0.3);
   }
 
   .btn-primary {
-    @apply bg-accent text-slate-900 px-6 py-3 rounded-lg font-semibold hover:bg-yellow-400 transition-all duration-200 shadow-lg hover:shadow-xl;
+    @apply bg-accent text-slate-900 px-6 py-3 rounded-lg font-semibold transition-all duration-200 shadow-lg;
+    @apply hover:brightness-110 hover:shadow-xl hover:scale-[1.02];
+    @apply focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg;
+    @apply active:scale-[0.98];
   }
 
   .btn-secondary {
-    @apply bg-surface text-fg px-6 py-3 rounded-lg font-medium border hover:bg-slate-700 transition-all duration-200;
+    @apply bg-surface text-fg px-6 py-3 rounded-lg font-medium border transition-all duration-200;
+    @apply hover:bg-border hover:border-muted;
+    @apply focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg;
+    @apply active:scale-[0.98];
   }
 
   .input-field {
-    @apply w-full px-4 py-3 bg-surface border rounded-lg text-fg placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-200;
+    @apply w-full px-4 py-3 bg-surface border rounded-lg text-fg placeholder-muted transition-all duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg focus:border-accent;
+    @apply hover:border-muted disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .metric-card {
-    @apply glass-card p-4 hover:bg-opacity-80 transition-all duration-200;
+    @apply glass-card p-4 transition-all duration-200;
+    @apply hover:shadow-card-hover hover:scale-[1.02] hover:border-accent/50;
   }
 
   .occasion-card {
-    @apply glass-card p-4 hover:shadow-card-hover transition-all duration-200 cursor-pointer;
+    @apply glass-card p-4 transition-all duration-200 cursor-pointer;
+    @apply hover:shadow-card-hover hover:scale-[1.01] hover:border-accent/30;
+    @apply focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg;
   }
 
   .occasion-card-today {
@@ -97,6 +109,87 @@
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  /* Loading States */
+  .skeleton {
+    @apply bg-surface animate-pulse rounded-lg;
+  }
+
+  .loading-spinner {
+    @apply animate-spin rounded-full border-2 border-muted border-t-accent;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200px 0;
+    }
+    100% {
+      background-position: calc(200px + 100%) 0;
+    }
+  }
+
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--color-surface)) 0%,
+      hsl(var(--color-border)) 50%,
+      hsl(var(--color-surface)) 100%
+    );
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Enhanced Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-surface rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+    transition: background-color 0.2s ease;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted;
+  }
+
+  /* Screen Reader Only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Enhanced Touch Targets */
+  @media (hover: none) {
+    .btn-primary,
+    .btn-secondary,
+    .occasion-card,
+    .metric-card {
+      min-height: 44px;
+    }
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
     }
   }
 }
