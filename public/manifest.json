@@ -1,0 +1,14 @@
+{
+  "name": "GiftChain",
+  "description": "GiftChain is a Base Mini App built with Zara.",
+  "image": "https://dummyimage.com/1200x628/0a0b0d/ffffff.png&text=OG",
+  "external_url": "https://2a843f96-2910-4cf5-95a4-b93cc2cd98c0.vercel.app",
+  "properties": {
+    "app": {
+      "name": "GiftChain",
+      "description": "GiftChain is a Base Mini App built with Zara.",
+      "url": "https://2a843f96-2910-4cf5-95a4-b93cc2cd98c0.vercel.app",
+      "icon": "https://0co.to/images/zara-2.png"
+    }
+  }
+}

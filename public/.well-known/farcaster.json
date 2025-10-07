@@ -1,0 +1,30 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "frame": {
+    "version": "1",
+    "name": "GiftChain",
+    "subtitle": "Built with Zara",
+    "description": "GiftChain is a Base Mini App built with Zara.",
+    "iconUrl": "https://0co.to/images/zara-2.png",
+    "homeUrl": "https://2a843f9629104cf595a4b93cc2cd98c0-k77w.vercel.app",
+    "splashImageUrl": "https://2a843f9629104cf595a4b93cc2cd98c0-k77w.vercel.app/splash.png",
+    "splashBackgroundColor": "#000000",
+    "heroImageUrl": "https://2a843f9629104cf595a4b93cc2cd98c0-k77w.vercel.app/image.png",
+    "tagline": "GiftChain",
+    "screenshotUrls": [
+      "https://2a843f9629104cf595a4b93cc2cd98c0-k77w.vercel.app/screenshot.png",
+      "https://2a843f9629104cf595a4b93cc2cd98c0-k77w.vercel.app/screenshot.png"
+    ],
+    "primaryCategory": "social",
+    "tags": [
+      "base",
+      "miniapp",
+      "onchainkit"
+    ],
+    "webhookUrl": "https://2a843f9629104cf595a4b93cc2cd98c0-k77w.vercel.app/api/webhook"
+  }
+}
