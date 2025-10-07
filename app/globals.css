@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* GiftChain Finance Theme - Dark Navy + Gold */
+  --color-bg: hsl(220, 30%, 8%);
+  --color-fg: hsl(0, 0%, 95%);
+  --color-accent: hsl(45, 100%, 50%);
+  --color-accent-soft: hsl(45, 100%, 95%);
+  --color-border: hsl(220, 20%, 20%);
+  --color-surface: hsl(220, 25%, 12%);
+  --color-muted: hsl(220, 10%, 60%);
+  --color-error: hsl(0, 84%, 60%);
+  --color-success: hsl(142, 76%, 36%);
+  --color-warning: hsl(38, 92%, 50%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-bg text-fg;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-surface border rounded-lg;
+    border-color: var(--color-border);
+    backdrop-filter: blur(10px);
+  }
+
+  .btn-primary {
+    @apply bg-accent text-bg px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-200 shadow-lg hover:shadow-xl;
+  }
+
+  .btn-secondary {
+    @apply bg-surface text-fg px-6 py-3 rounded-lg font-semibold border hover:bg-opacity-80 transition-all duration-200;
+    border-color: var(--color-border);
+  }
+
+  .input-field {
+    @apply bg-surface text-fg px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-200;
+    border-color: var(--color-border);
+  }
+
+  .metric-card {
+    @apply glass-card p-4 hover:bg-opacity-80 transition-all duration-200;
+  }
+
+  .occasion-card {
+    @apply glass-card p-4 hover:shadow-card-hover transition-all duration-200 cursor-pointer;
+  }
+
+  .occasion-card-today {
+    @apply occasion-card border-2 border-accent;
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-warning) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
