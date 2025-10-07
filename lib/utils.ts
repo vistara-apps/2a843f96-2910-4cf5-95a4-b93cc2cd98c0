@@ -20,6 +20,17 @@ export function calculateDaysUntil(targetDate: Date): number {
   return diffDays;
 }
 
+export function getDaysUntil(targetDate: Date): number {
+  return calculateDaysUntil(targetDate);
+}
+
+export function formatDaysUntil(days: number): string {
+  if (days === 0) return 'Today';
+  if (days === 1) return 'Tomorrow';
+  if (days < 0) return `${Math.abs(days)} days ago`;
+  return `${days} days`;
+}
+
 export function calculateTransactionFee(amount: number, feePercent: number): number {
   return amount * (feePercent / 100);
 }

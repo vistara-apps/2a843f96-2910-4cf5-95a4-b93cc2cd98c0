@@ -1,10 +1,16 @@
 'use client';
 
 import { Wallet, TrendingUp, ArrowUpRight, ArrowDownRight, Plus } from 'lucide-react';
+import { WalletConnection } from './WalletConnection';
+import { useAccount } from 'wagmi';
+import { usePayments } from '@/lib/hooks/usePayments';
 
 export function VaultDashboard() {
+  const { isConnected } = useAccount();
+  const { balance } = usePayments();
+  
   // Mock data
-  const vaultBalance = 250.00;
+  const vaultBalance = balance ? parseFloat(balance) : 0;
   const monthlyBudget = 300.00;
   const upcomingCommitments = 75.00;
   const totalSpent = 1250.00;
@@ -18,6 +24,9 @@ export function VaultDashboard() {
 
   return (
     <div className="space-y-6">
+      {/* Wallet Connection */}
+      <WalletConnection />
+      
       {/* Balance Card */}
       <div className="glass-card p-6">
         <div className="flex items-center justify-between mb-6">

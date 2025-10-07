@@ -4,6 +4,15 @@ export const APP_TAGLINE = 'Never miss a birthday. Never stress about gifts.';
 export const TRANSACTION_FEE_PERCENT = 3;
 export const PREMIUM_PRICE_MONTHLY = 2.99;
 
+// Base Network Constants
+export const BASE_CHAIN_ID = 8453;
+export const USDC_CONTRACT_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as const;
+export const USDC_DECIMALS = 6;
+
+// Payment Configuration
+export const X402_PAYMENT_ENDPOINT = process.env.NEXT_PUBLIC_X402_ENDPOINT || 'https://api.x402.dev';
+export const DEFAULT_GAS_LIMIT = BigInt(100000);
+
 export const REMINDER_DAYS = [7, 3, 1];
 
 export const GIFT_CATEGORIES = [

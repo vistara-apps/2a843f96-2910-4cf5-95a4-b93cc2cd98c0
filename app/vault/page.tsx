@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Navigation } from '@/components/layout/Navigation';
 import { VaultBalance } from '@/components/vault/VaultBalance';
 import { UpcomingCommitments } from '@/components/vault/UpcomingCommitments';
+import { PaymentTest } from '@/components/PaymentTest';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { mockScheduledGifts, mockOccasions, mockRecipients } from '@/lib/mock-data';
@@ -91,6 +92,9 @@ export default function VaultPage() {
             ))}
           </div>
         </Card>
+
+        {/* Payment Testing */}
+        <PaymentTest />
 
         {/* Budget Insights */}
         <Card>
